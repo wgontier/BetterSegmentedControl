@@ -47,9 +47,9 @@ import Foundation
         
     // MARK: Properties
     /// The selected index
-    public private(set) var index: UInt
+    @objc public private(set) var index: UInt
     /// The segments available for selection
-    public var segments: [BetterSegmentedControlSegment] {
+    @objc public var segments: [BetterSegmentedControlSegment] {
         didSet {
             guard segments.count > 1 else {
                 return
@@ -103,13 +103,13 @@ import Foundation
     /// Whether the indicator should bounce when selecting a new index. Defaults to true
     @IBInspectable public var bouncesOnChange: Bool = true
     /// Whether the the control should always send the .ValueChanged event, regardless of the index remaining unchanged after interaction. Defaults to false
-    @IBInspectable public var alwaysAnnouncesValue: Bool = false
+    @objc @IBInspectable public var alwaysAnnouncesValue: Bool = false
     /// Whether to send the .ValueChanged event immediately or wait for animations to complete. Defaults to true
-    @IBInspectable public var announcesValueImmediately: Bool = true
+    @objc @IBInspectable public var announcesValueImmediately: Bool = true
     /// Whether the the control should ignore pan gestures. Defaults to false
-    @IBInspectable public var panningDisabled: Bool = false
+    @objc @IBInspectable public var panningDisabled: Bool = false
     /// The control's and indicator's corner radii
-    @IBInspectable public var cornerRadius: CGFloat {
+    @objc @IBInspectable public var cornerRadius: CGFloat {
         get {
             return layer.cornerRadius
         }
@@ -120,7 +120,7 @@ import Foundation
         }
     }
     /// The indicator view's background color
-    @IBInspectable public var indicatorViewBackgroundColor: UIColor? {
+    @objc @IBInspectable public var indicatorViewBackgroundColor: UIColor? {
         get {
             return indicatorView.backgroundColor
         }
@@ -129,11 +129,11 @@ import Foundation
         }
     }
     /// The indicator view's inset. Defaults to 2.0
-    @IBInspectable public var indicatorViewInset: CGFloat = 2.0 {
+    @objc @IBInspectable public var indicatorViewInset: CGFloat = 2.0 {
         didSet { setNeedsLayout() }
     }
     /// The indicator view's border width
-    @IBInspectable public var indicatorViewBorderWidth: CGFloat {
+    @objc @IBInspectable public var indicatorViewBorderWidth: CGFloat {
         get {
             return indicatorView.layer.borderWidth
         }
@@ -142,7 +142,7 @@ import Foundation
         }
     }
     /// The indicator view's border color
-    @IBInspectable public var indicatorViewBorderColor: UIColor? {
+    @objc @IBInspectable public var indicatorViewBorderColor: UIColor? {
         get {
             guard let color = indicatorView.layer.borderColor else {
                 return nil
@@ -185,6 +185,72 @@ import Foundation
         completeInit()
         self.options = options
     }
+
+    
+    @objc public init(frame: CGRect,
+                segments: [BetterSegmentedControlSegment],
+                index: UInt = 0)
+    {
+        self.index = index
+        self.segments = segments
+        super.init(frame: frame)
+        completeInit()
+    }
+
+    @objc public init(frame: CGRect,
+                      segments: [BetterSegmentedControlSegment],
+                      index: UInt = 0,
+                      objcOptions: Dictionary<String, AnyObject> ) {
+        
+        let keysArray = Array(objcOptions.keys)
+        
+        var swiftOptions: [BetterSegmentedControlOption] = []
+        
+        for key in keysArray {
+            switch key {
+            case "IndicatorViewBackgroundColor":
+                swiftOptions.append(.indicatorViewBackgroundColor(objcOptions[key]! as! UIColor ))
+                
+            case "IndicatorViewInset":
+                swiftOptions.append(.indicatorViewInset(objcOptions[key]! as! CGFloat))
+                
+            case "IndicatorViewBorderWidth":
+                swiftOptions.append(.indicatorViewBorderWidth(objcOptions[key]! as! CGFloat))
+                
+            case "IndicatorViewBorderColor":
+                swiftOptions.append(.indicatorViewBorderColor(objcOptions[key]! as! UIColor ))
+                
+            case "AlwaysAnnouncesValue":
+                swiftOptions.append(.alwaysAnnouncesValue(objcOptions[key]! as! Bool ))
+                
+            case "AnnouncesValueImmediately":
+                swiftOptions.append(.announcesValueImmediately(objcOptions[key]! as! Bool))
+                
+            case "PanningDisabled":
+                swiftOptions.append(.panningDisabled(objcOptions[key]! as! Bool))
+                
+            case "BackgroundColor":
+                swiftOptions.append(.backgroundColor(objcOptions[key]! as! UIColor))
+                
+            case "CornerRadius":
+                swiftOptions.append(.cornerRadius(objcOptions[key]! as! CGFloat))
+                
+            case "BouncesOnChange":
+                swiftOptions.append(.bouncesOnChange(objcOptions[key]! as! Bool))
+                
+            default: break
+            }
+        }
+
+        self.index = index
+        self.segments = segments
+        
+        super.init(frame: frame)
+        completeInit()
+        
+        self.options = swiftOptions
+    }
+
     required public init?(coder aDecoder: NSCoder) {
         self.index = 0
         self.segments = [LabelSegment(text: "First"), LabelSegment(text: "Second")]
@@ -274,7 +340,7 @@ import Foundation
     /// - Parameters:
     ///   - index: The new index
     ///   - animated: (Optional) Whether the change should be animated or not. Defaults to true.
-    public func setIndex(_ index: UInt, animated: Bool = true) {
+    @objc public func setIndex(_ index: UInt, animated: Bool = true) {
         guard normalSegments.indices.contains(Int(index)) else {
             return
         }

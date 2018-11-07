@@ -8,7 +8,11 @@
 
 import Foundation
 
-public enum BetterSegmentedControlOption {        
+public enum BetterSegmentedControlOption {
+
+    
+    
+    
     /* Selected segment */
     case indicatorViewBackgroundColor(UIColor)
     case indicatorViewInset(CGFloat)

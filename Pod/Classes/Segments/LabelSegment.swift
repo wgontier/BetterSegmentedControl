@@ -7,7 +7,8 @@
 
 import Foundation
 
-open class LabelSegment: BetterSegmentedControlSegment {
+
+open class LabelSegment: NSObject, BetterSegmentedControlSegment {
     // MARK: Constants
     private struct DefaultValues {
         static let normalBackgroundColor: UIColor = .clear
@@ -29,7 +30,7 @@ open class LabelSegment: BetterSegmentedControlSegment {
     public var selectedBackgroundColor: UIColor
     
     // MARK: Lifecycle
-    public init(text: String? = nil,
+    @objc public init(text: String? = nil,
                 normalBackgroundColor: UIColor? = nil,
                 normalFont: UIFont? = nil,
                 normalTextColor: UIColor? = nil,

@@ -7,7 +7,9 @@
 
 import Foundation
 
-public protocol BetterSegmentedControlSegment {
+@objc public protocol BetterSegmentedControlSegment {
+
     var normalView: UIView { get }
+
     var selectedView: UIView { get }
 }
